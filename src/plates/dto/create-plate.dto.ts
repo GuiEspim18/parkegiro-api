@@ -4,4 +4,6 @@ export class CreatePlateDto {
     brand: string;
     model: string;
     color: string;
+    entrance: string = null;
+    departure: string = null;
 }

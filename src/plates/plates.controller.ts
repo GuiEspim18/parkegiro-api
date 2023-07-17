@@ -20,8 +20,20 @@ export class PlatesController {
    */
 
   @Post()
-  public create(@Body() createPlateDto: CreatePlateDto): Promise<CreatePlateDto> {
-    return this.platesService.create(createPlateDto);
+  public create(@Body() data: CreatePlateDto): Promise<CreatePlateDto> {
+    return this.platesService.create(data);
+  }
+
+
+  /** 
+   * Method to find all plate by stage on database
+   * @param num 
+   * @returns Promise<CreatePlateDto>
+   */
+
+  @Get('/stage/:num')
+  public findByStage(@Param('num') num: string): Promise<Array<CreatePlateDto>> {
+    return this.platesService.findByStage(+num);
   }
 
 
@@ -56,8 +68,8 @@ export class PlatesController {
    */
 
   @Patch(':id')
-  public update(@Param('id') id: string, @Body() updatePlateDto: UpdatePlateDto): Promise<CreatePlateDto & Plate> {
-    return this.platesService.update(+id, updatePlateDto);
+  public update(@Param('id') id: string, @Body() data: UpdatePlateDto): Promise<CreatePlateDto & Plate> {
+    return this.platesService.update(+id, data);
   }
 
 

@@ -17,5 +17,14 @@ export class Plate {
 
     @Column()
     color: string
+
+    @Column({default: null, nullable: true})
+    entrance: string;
+
+    @Column({default: null, nullable: true})
+    departure: string;
+
+    @Column({ default: 0, })
+    stage: number;
     
 }
