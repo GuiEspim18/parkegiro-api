@@ -21,6 +21,8 @@ export class PlatesService {
 
   public async create(data: CreatePlateDto): Promise<CreatePlateDto> {
     if (data) {
+      const exists: CreatePlateDto = await this.plateRepository.findOne({ where: { plate: data.plate, stage: 0 } });
+      if (exists) throw new HttpException("Placa já cadastrada", 500);
       const plate: CreatePlateDto = this.plateRepository.create(data);
       return await this.plateRepository.save(plate);
     }
