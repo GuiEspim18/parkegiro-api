@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PlatesModule } from './plates/plates.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
+import { PhotoModule } from './photo/photo.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       migrations: ['src/migration/**/*.ts'],
       subscribers: ['src/subscriber/**/*.ts']
     }),
-    PlatesModule
+    PlatesModule,
+    UsersModule,
+    PhotoModule
   ],
   controllers: [AppController],
   providers: [AppService],
