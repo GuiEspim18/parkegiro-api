@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -23,6 +24,7 @@ export class UsersService {
     if (data) {
       const exists: CreateUserDto = await this.userRepository.findOne({ where: { email: data.email } });
       if (exists) throw new HttpException("Usuário já cadastrado", 500);
+      data.password = await bcrypt.hash(data.password, 12)
       const user: CreateUserDto = this.userRepository.create(data);
       return await this.userRepository.save(user);
     }
@@ -36,7 +38,7 @@ export class UsersService {
    */
 
   public async findAll(): Promise<Array<CreateUserDto>> {
-    return await this.userRepository.find();
+    return await this.userRepository.find({relations: ['photo']});
   }
 
 
@@ -48,7 +50,7 @@ export class UsersService {
 
   public async findOne(id: number): Promise<CreateUserDto> {
     if (id && Number(id)) {
-      const user: CreateUserDto = await this.userRepository.findOne({ where: { id: id } });
+      const user: CreateUserDto = await this.userRepository.findOne({ where: { id: id }, relations: ['photo'] });
       if (user) return user;
       throw new HttpException("None user found", 500);
     }

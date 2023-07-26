@@ -1,5 +1,5 @@
 export class CreatePhotoDto {
-    id: number;
+    id?: number;
     url: string;
     name: string;
     originName: string

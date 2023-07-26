@@ -1,7 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { PhotoService } from './photo.service';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from './multer.options';
+import { Photo } from './entities/photo.entity';
+import { DeleteResult } from 'typeorm';
 
 @Controller('photo')
 export class PhotoController {
@@ -15,7 +19,13 @@ export class PhotoController {
    */
 
   @Post()
-  public create(@Body() data: CreatePhotoDto) {
+  @UseInterceptors(FileInterceptor('file', multerOptions))
+  public async create(@UploadedFile() file: any): Promise<CreatePhotoDto> {
+    let data: CreatePhotoDto = {
+      url: file.path,
+      name: file.filename,
+      originName: file.originalname
+    };
     return this.photoService.create(data);
   }
 
@@ -26,7 +36,7 @@ export class PhotoController {
    */
 
   @Get()
-  public findAll() {
+  public findAll(): Promise<Array<CreatePhotoDto>> {
     return this.photoService.findAll();
   }
 
@@ -38,7 +48,7 @@ export class PhotoController {
    */
 
   @Get(':id')
-  public findOne(@Param('id') id: string) {
+  public findOne(@Param('id') id: string): Promise<CreatePhotoDto> {
     return this.photoService.findOne(+id);
   }
 
@@ -51,7 +61,7 @@ export class PhotoController {
    */
 
   @Patch(':id')
-  public update(@Param('id') id: string, @Body() data: UpdatePhotoDto) {
+  public update(@Param('id') id: string, @Body() data: UpdatePhotoDto): Promise<CreatePhotoDto & Photo> {
     return this.photoService.update(+id, data);
   }
 
@@ -63,7 +73,7 @@ export class PhotoController {
    */
 
   @Delete(':id')
-  public remove(@Param('id') id: string) {
+  public remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.photoService.remove(+id);
   }
 }

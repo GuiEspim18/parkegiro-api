@@ -7,8 +7,10 @@ export class CreateUserDto {
     surname: string;
     cpf: string;
     birthdate: string;
-    cep: string;
+    zipCode: string;
     street: string;
+    state: string;
+    city: string;
     number: string;
     compliment: string;
     cellphone: string;

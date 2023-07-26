@@ -23,7 +23,13 @@ export class User {
     birthdate: string;
 
     @Column()
-    cep: string;
+    zipCode: string;
+
+    @Column()
+    state: string;
+
+    @Column()
+    city: string;
 
     @Column()
     street: string;
@@ -46,11 +52,11 @@ export class User {
     @Column()
     password: string;
 
-    @OneToOne(() => Photo)
+    @OneToOne(() => Photo, { cascade: true, onDelete: "CASCADE" })
     @JoinColumn({ name: 'photo' })
     photo: Photo;
 
-    @Column()
+    @Column({ nullable: true })
     notifications: number
 
 }

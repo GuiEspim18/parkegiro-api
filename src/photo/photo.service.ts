@@ -33,7 +33,7 @@ export class PhotoService {
    * @returns Promise<Array<CreatePhotoDto>>
    */
 
-  public async findAll() {
+  public async findAll(): Promise<Array<CreatePhotoDto>> {
     return await this.photoRepository.find();
   }
 
