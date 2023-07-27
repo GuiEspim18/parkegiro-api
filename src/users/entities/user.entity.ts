@@ -1,5 +1,5 @@
 import { Photo } from "src/photo/entities/photo.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -52,11 +52,16 @@ export class User {
     @Column()
     password: string;
 
-    @OneToOne(() => Photo, { cascade: true, onDelete: "CASCADE" })
-    @JoinColumn({ name: 'photo' })
+    @OneToOne(() => Photo, photo => photo.user, { eager: true, onDelete: "CASCADE", nullable: true })
     photo: Photo;
 
     @Column({ nullable: true })
-    notifications: number
+    notifications: number;
+
+    @Column({ nullable: true, default: null })
+    lastAccess: Date;
+
+    @CreateDateColumn()
+    createdAt: Date;
 
 }

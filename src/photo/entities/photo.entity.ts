@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/entities/user.entity";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Photo {
@@ -14,4 +15,11 @@ export class Photo {
 
     @Column()
     originName: string
+
+    @OneToOne(() => User, user => user.photo, { onDelete: "CASCADE", nullable: true })
+    @JoinColumn({ name: 'user' })
+    user: User;
+
+    @Column({ nullable: true })
+    admin: number;
 }

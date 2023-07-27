@@ -5,12 +5,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import * as fs from "fs";
+import { Photo } from 'src/photo/entities/photo.entity';
+import { CreatePhotoDto } from 'src/photo/dto/create-photo.dto';
 
 @Injectable()
 export class UsersService {
 
-  constructor (
-    @InjectRepository(User) private readonly userRepository: Repository<User>
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Photo) private readonly photoRepository: Repository<Photo>,
   ) { }
 
 
@@ -38,7 +42,7 @@ export class UsersService {
    */
 
   public async findAll(): Promise<Array<CreateUserDto>> {
-    return await this.userRepository.find({relations: ['photo']});
+    return await this.userRepository.find({ relations: ['photo'], order: { createdAt: "ASC" } });
   }
 
 
@@ -67,8 +71,15 @@ export class UsersService {
 
   public async update(id: number, data: UpdateUserDto): Promise<CreateUserDto & User> {
     if (id && Number(id)) {
-      const user: CreateUserDto = await this.userRepository.findOne({ where: { id: id } });
-      if (user) return await this.userRepository.save({ id, ...user, ...data });
+      const user: CreateUserDto = await this.userRepository.findOne({ where: { id: id }, relations: ['photo'] });
+      if (user) {
+        const saved: CreateUserDto & User = await this.userRepository.save({ id, ...user, ...data });
+        // finding user photo
+        const photo: CreatePhotoDto = await this.photoRepository.findOne({ where: { id: id } })
+        // if this photo does not belong user it will be deleted
+        if (!photo.user) await this.photoRepository.delete(photo.id)
+        return saved;
+      }
       throw new HttpException("None user found", 500);
     }
     throw new HttpException("You need to provide a valid id", 500);
@@ -83,7 +94,8 @@ export class UsersService {
 
   public async remove(id: number): Promise<DeleteResult> {
     if (id && Number(id)) {
-      const user: CreateUserDto = await this.userRepository.findOne({ where: { id: id } });
+      const user: CreateUserDto = await this.userRepository.findOne({ where: { id: id }, relations: ['photo'] });
+      if (user.photo) fs.unlinkSync(user.photo.url);
       if (user) return await this.userRepository.delete(id);
       throw new HttpException("None user found", 500);
     }

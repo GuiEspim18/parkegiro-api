@@ -18,5 +18,6 @@ export class CreateUserDto {
     email: string;
     password: string;
     photo: Photo;
-    notifications: number
+    notifications: number;
+    lastAccess: Date;
 }

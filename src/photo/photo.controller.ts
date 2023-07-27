@@ -18,14 +18,10 @@ export class PhotoController {
    * @returns Promise<CreatePhotoDto>
    */
 
-  @Post()
+  @Post(':id')
   @UseInterceptors(FileInterceptor('file', multerOptions))
-  public async create(@UploadedFile() file: any): Promise<CreatePhotoDto> {
-    let data: CreatePhotoDto = {
-      url: file.path,
-      name: file.filename,
-      originName: file.originalname
-    };
+  public async create(@UploadedFile() file: any, @Param('id') id: string): Promise<CreatePhotoDto> {
+    let data: CreatePhotoDto =  new CreatePhotoDto(file.path, file.filename, file.originalname, Number(id));
     return this.photoService.create(data);
   }
 

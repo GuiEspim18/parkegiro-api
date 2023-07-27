@@ -4,6 +4,7 @@ import { UpdatePhotoDto } from './dto/update-photo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Photo } from './entities/photo.entity';
 import { DeleteResult, Repository } from 'typeorm';
+import * as fs from "fs";
 
 @Injectable()
 export class PhotoService {
@@ -80,6 +81,7 @@ export class PhotoService {
   public async remove(id: number): Promise<DeleteResult> {
     if (id && Number(id)) {
       const photo: CreatePhotoDto = await this.photoRepository.findOne({ where: { id: id } });
+      fs.unlinkSync(photo.url);
       if (photo) return await this.photoRepository.delete(id);
       throw new HttpException("None photo found", 500);
     }
