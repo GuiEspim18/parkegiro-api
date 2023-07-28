@@ -5,6 +5,7 @@ import { PlatesModule } from './plates/plates.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { PhotoModule } from './photo/photo.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { PhotoModule } from './photo/photo.module';
     }),
     PlatesModule,
     UsersModule,
-    PhotoModule
+    PhotoModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
