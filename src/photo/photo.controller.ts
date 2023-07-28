@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
 import { PhotoService } from './photo.service';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
@@ -6,6 +6,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from './multer.options';
 import { Photo } from './entities/photo.entity';
 import { DeleteResult } from 'typeorm';
+import * as path from 'path';
 
 @Controller('photo')
 export class PhotoController {
@@ -46,6 +47,20 @@ export class PhotoController {
   @Get(':id')
   public findOne(@Param('id') id: string): Promise<CreatePhotoDto> {
     return this.photoService.findOne(+id);
+  }
+
+
+  
+  /** 
+   * Method to download the photo required
+   * @param name
+   * @param res
+   * @returns any
+   */
+
+  @Get("download/:name")
+  public download(@Param("name") name: string, @Res() res: any): any {
+    return res.sendFile(path.resolve(this.photoService.download(name)));
   }
 
 

@@ -1,10 +1,11 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Photo } from './entities/photo.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import * as fs from "fs";
+import { join } from 'path';
 
 @Injectable()
 export class PhotoService {
@@ -86,5 +87,25 @@ export class PhotoService {
       throw new HttpException("None photo found", 500);
     }
     throw new HttpException("You need to provide a valid id", 500);
+  }
+
+
+  
+  /** 
+   * Method to download the photo required
+   * @param name
+   * @param res
+   * @returns any
+   */
+
+  public download(name: string): string {
+    const findPath: string = join(__dirname, '../../uploads/' + name.replace(/['"]+/g, ''));
+    try {
+      const exists = fs.existsSync(findPath);
+      if (exists) return `./uploads/${name}`
+      throw new HttpException("Arquivo não encontrado", HttpStatus.NOT_FOUND);
+    } catch (err: any) {
+      throw new HttpException("Erro ao buscar arquivo", HttpStatus.BAD_REQUEST);
+    }
   }
 }
