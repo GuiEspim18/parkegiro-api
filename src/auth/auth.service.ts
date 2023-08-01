@@ -12,10 +12,10 @@ import { LoginResultDto } from './dto/loginResult.dto';
 @Injectable()
 export class AuthService {
 
-    constructor (
+    constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
         private readonly jwtService: JwtService
-    ) {}
+    ) { }
 
 
     /** 
@@ -26,21 +26,21 @@ export class AuthService {
 
     public async loginUser(data: UserLoginDto): Promise<LoginResultDto> {
         const email: string = data.email;
-        const user: CreateUserDto = await this.userRepository.findOne({ where: { email: email } });
-        if (user) {
-            const pw = await this.comparePw(data.password, user.password);
+        const userFound: CreateUserDto = await this.userRepository.findOne({ where: { email: email } });
+        if (userFound) {
+            const pw = await this.comparePw(data.password, userFound.password);
             if (pw) {
                 const playLoad: PlayLoadDto = {
-                    id: user.id,
-                    username: user.username,
-                    passoword: user.password
+                    id: userFound.id,
+                    username: userFound.username,
+                    passoword: userFound.password
                 };
                 const token = this.jwtService.sign(playLoad);
-                const { password, ...result } = user;
-                return { result, token }
+                const { password, ...user } = userFound;
+                return { user, token }
             }
             throw new HttpException("Senha incorreta!", 500);
-        } 
+        }
         throw new HttpException("Usuário não cadastrado!", 500);
     }
 
@@ -54,6 +54,25 @@ export class AuthService {
 
     private async comparePw(att: string, pw: string): Promise<boolean> {
         return await bcrypt.compare(att, pw);
+    }
+
+
+    /** 
+     * Method to verify sent token
+     * @param data
+     * @returns Promise<boolean>
+     */
+
+    public async verify(data: any): Promise<boolean> {
+
+        const param: string = data.headers.Authorization.replace("Bearer ", "");
+        const token: any = this.jwtService.decode(param);
+        if (token) {
+            const user = await this.userRepository.findOne({ where: { email: token.email } });
+            if (user) return user.password === token.passoword;
+        }
+        return false
+        // const token = this.jwtService.decode(data.token)
     }
 
 }

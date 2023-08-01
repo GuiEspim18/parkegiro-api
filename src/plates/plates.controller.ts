@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { PlatesService } from './plates.service';
 import { CreatePlateDto } from './dto/create-plate.dto';
 import { UpdatePlateDto } from './dto/update-plate.dto';
 import { Plate } from './entities/plate.entity';
 import { DeleteResult } from 'typeorm';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 
 @Controller('plates')
 export class PlatesController {
@@ -19,6 +20,7 @@ export class PlatesController {
    * @returns Promise<CreatePlateDto>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   public create(@Body() data: CreatePlateDto): Promise<CreatePlateDto> {
     return this.platesService.create(data);
@@ -31,6 +33,7 @@ export class PlatesController {
    * @returns Promise<CreatePlateDto>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Get('/stage/:num')
   public findByStage(@Param('num') num: string): Promise<Array<CreatePlateDto>> {
     return this.platesService.findByStage(+num);
@@ -42,6 +45,7 @@ export class PlatesController {
    * @returns Promise<Array<CreatePlateDto>>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   public findAll(): Promise<Array<CreatePlateDto>> {
     return this.platesService.findAll();
@@ -54,6 +58,7 @@ export class PlatesController {
    * @returns Promise<Array<CreatePlateDto>>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   public findOne(@Param('id') id: string): Promise<CreatePlateDto> {
     return this.platesService.findOne(+id);
@@ -67,6 +72,7 @@ export class PlatesController {
    * @returns Promise<CreatePlateDto & Plate>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   public update(@Param('id') id: string, @Body() data: UpdatePlateDto): Promise<CreatePlateDto & Plate> {
     return this.platesService.update(+id, data);
@@ -79,6 +85,7 @@ export class PlatesController {
    * @returns Promise<DeleteResult>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   public remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.platesService.remove(+id);

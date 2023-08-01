@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Res, UseGuards } from '@nestjs/common';
 import { PhotoService } from './photo.service';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
@@ -7,6 +7,7 @@ import { multerOptions } from './multer.options';
 import { Photo } from './entities/photo.entity';
 import { DeleteResult } from 'typeorm';
 import * as path from 'path';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 
 @Controller('photo')
 export class PhotoController {
@@ -19,6 +20,7 @@ export class PhotoController {
    * @returns Promise<CreatePhotoDto>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id')
   @UseInterceptors(FileInterceptor('file', multerOptions))
   public async create(@UploadedFile() file: any, @Param('id') id: string): Promise<CreatePhotoDto> {
@@ -32,6 +34,7 @@ export class PhotoController {
    * @returns Promise<Array<CreatePhotoDto>>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   public findAll(): Promise<Array<CreatePhotoDto>> {
     return this.photoService.findAll();
@@ -44,6 +47,7 @@ export class PhotoController {
    * @returns Promise<Array<CreatePhotoDto>>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   public findOne(@Param('id') id: string): Promise<CreatePhotoDto> {
     return this.photoService.findOne(+id);
@@ -71,6 +75,7 @@ export class PhotoController {
    * @returns Promise<CreatePhotoDto & Photo>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   public update(@Param('id') id: string, @Body() data: UpdatePhotoDto): Promise<CreatePhotoDto & Photo> {
     return this.photoService.update(+id, data);
@@ -83,6 +88,7 @@ export class PhotoController {
    * @returns Promise<DeleteResult>
    */
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   public remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.photoService.remove(+id);
