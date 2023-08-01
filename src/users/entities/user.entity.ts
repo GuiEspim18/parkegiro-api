@@ -49,7 +49,7 @@ export class User {
     @Column()
     email: string;
 
-    @Column()
+    @Column({ select: false })
     password: string;
 
     @OneToOne(() => Photo, photo => photo.user, { eager: true, onDelete: "CASCADE", nullable: true })

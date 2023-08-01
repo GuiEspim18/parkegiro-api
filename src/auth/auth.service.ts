@@ -8,13 +8,15 @@ import * as bcrypt from "bcrypt";
 import { JwtService } from '@nestjs/jwt';
 import { UserLoginDto } from './dto/userLogin.dto';
 import { LoginResultDto } from './dto/loginResult.dto';
+import { JwtStrategy } from './jwt/jwt.strategy';
 
 @Injectable()
 export class AuthService {
 
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
-        private readonly jwtService: JwtService
+        private readonly jwtService: JwtService,
+        private readonly jwtStrategy: JwtStrategy
     ) { }
 
 
@@ -26,18 +28,14 @@ export class AuthService {
 
     public async loginUser(data: UserLoginDto): Promise<LoginResultDto> {
         const email: string = data.email;
-        const userFound: CreateUserDto = await this.userRepository.findOne({ where: { email: email } });
+        const userFound: CreateUserDto = await this.userRepository.findOne({ where: { email: email }, select: ['username', 'email', 'password', 'id'] });
         if (userFound) {
             const pw = await this.comparePw(data.password, userFound.password);
             if (pw) {
-                const playLoad: PlayLoadDto = {
-                    id: userFound.id,
-                    username: userFound.username,
-                    passoword: userFound.password
-                };
+                const playLoad: PlayLoadDto = await this.jwtStrategy.validate(userFound);
                 const token = this.jwtService.sign(playLoad);
                 const { password, ...user } = userFound;
-                return { user, token }
+                return { user, token };
             }
             throw new HttpException("Senha incorreta!", 500);
         }
@@ -64,15 +62,10 @@ export class AuthService {
      */
 
     public async verify(data: any): Promise<boolean> {
-
         const param: string = data.headers.Authorization.replace("Bearer ", "");
-        const token: any = this.jwtService.decode(param);
-        if (token) {
-            const user = await this.userRepository.findOne({ where: { email: token.email } });
-            if (user) return user.password === token.passoword;
-        }
-        return false
-        // const token = this.jwtService.decode(data.token)
+        const token: any = this.jwtService.verify(param);
+        if (token) return true;
+        return false;
     }
 
 }

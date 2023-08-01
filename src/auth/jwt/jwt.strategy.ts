@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 
     /** 
-     * Method to validate the jwt token sent in request 
+     * Method to build the playload
      * @param data
      * @returns Promise<PlayLoadDto>
      */
@@ -24,9 +24,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     public async validate(data: PlayLoadDto): Promise<PlayLoadDto> {
         const playload: PlayLoadDto = {
             id: data.id,
-            username: data.username,
-            passoword: data.passoword
+            username: data.username
         };
+        console.log(playload)
         return playload;
     }
 
