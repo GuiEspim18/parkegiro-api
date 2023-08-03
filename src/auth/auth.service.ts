@@ -63,6 +63,7 @@ export class AuthService {
 
     public async verify(data: any): Promise<boolean> {
         const param: string = data.headers.Authorization.replace("Bearer ", "");
+        if (param === "null") return false
         const token: any = this.jwtService.verify(param);
         if (token) return true;
         return false;
