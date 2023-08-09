@@ -1,5 +1,6 @@
+import { Admin } from "src/admin/entities/admin.entity";
 import { Photo } from "src/photo/entities/photo.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -63,5 +64,8 @@ export class User {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @ManyToOne(() => Admin, admin => admin.user)
+    admin: Admin
 
 }

@@ -1,3 +1,4 @@
+import { Admin } from "src/admin/entities/admin.entity";
 import { User } from "src/users/entities/user.entity";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -20,6 +21,7 @@ export class Photo {
     @JoinColumn({ name: 'user' })
     user: User;
 
-    @Column({ nullable: true })
-    admin: number;
+    @OneToOne(() => Admin, admin => admin.photo, { onDelete: "CASCADE", nullable: true })
+    @JoinColumn({ name: "admin" })
+    admin: Admin;
 }

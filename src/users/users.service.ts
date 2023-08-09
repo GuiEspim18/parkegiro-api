@@ -73,9 +73,9 @@ export class UsersService {
     if (id && Number(id)) {
       const user: CreateUserDto = await this.userRepository.findOne({ where: { id: id }, relations: ['photo'] });
       if (user) {
-        const saved: CreateUserDto & User = await this.userRepository.save({ id, ...user, ...data });
         // finding user photo
-        const photo: CreatePhotoDto = await this.photoRepository.findOne({ where: { id: id } })
+        const photo: CreatePhotoDto = await this.photoRepository.findOne({ where: { user: { id: user.id } } });
+        const saved: CreateUserDto & User = await this.userRepository.save({ id, ...user, ...data });
         // if this photo does not belong user it will be deleted
         if (!photo.user) await this.photoRepository.delete(photo.id)
         return saved;
