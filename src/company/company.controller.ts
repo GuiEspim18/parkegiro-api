@@ -8,8 +8,8 @@ export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Post()
-  create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companyService.create(createCompanyDto);
+  create(@Body() data: CreateCompanyDto) {
+    return this.companyService.create(data);
   }
 
   @Get()
@@ -23,8 +23,8 @@ export class CompanyController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companyService.update(+id, updateCompanyDto);
+  update(@Param('id') id: string, @Body() data: UpdateCompanyDto) {
+    return this.companyService.update(+id, data);
   }
 
   @Delete(':id')

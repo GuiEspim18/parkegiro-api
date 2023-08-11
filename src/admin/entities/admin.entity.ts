@@ -1,6 +1,7 @@
+import { Company } from "src/company/entities/company.entity";
 import { Photo } from "src/photo/entities/photo.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Admin {
@@ -9,10 +10,10 @@ export class Admin {
 
     @Column()
     username: string;
-    
+
     @Column()
     name: string;
-    
+
     @Column()
     surname: string;
 
@@ -52,15 +53,18 @@ export class Admin {
     @Column()
     password: string;
 
-    @OneToOne(() => Photo, photo => photo.admin, {eager: true, onDelete: "CASCADE", nullable: true, })
+    @OneToOne(() => Photo, photo => photo.admin, { eager: true, onDelete: "CASCADE", nullable: true, })
     photo: Photo;
 
-    @Column()
+    @Column({ nullable: true })
     notifications: number;
 
     @OneToMany(() => User, user => user.admin)
     user: Array<User>
 
-    @Column()
+    @OneToOne(() => Company, company => company.admin)
+    company: Company
+
+    @Column({ nullable: true })
     lastAccess: Date;
 }

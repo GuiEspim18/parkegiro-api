@@ -8,6 +8,9 @@ import * as bcrypt from "bcrypt";
 import * as fs from "fs";
 import { Photo } from 'src/photo/entities/photo.entity';
 import { CreatePhotoDto } from 'src/photo/dto/create-photo.dto';
+import { Company } from 'src/company/entities/company.entity';
+import { CompanyService } from 'src/company/company.service';
+import { CreateCompanyDto } from 'src/company/dto/create-company.dto';
 
 @Injectable()
 export class AdminService {
@@ -26,6 +29,7 @@ export class AdminService {
 
   public async create(data: CreateAdminDto): Promise<CreateAdminDto & Admin> {
     if (data) {
+      delete data.company;
       const exists: CreateAdminDto = await this.adminRepository.findOne({ where: { email: data.email } });
       if (exists) throw new HttpException("Usuário já cadastrado!", 500);
       data.password = await bcrypt.hash(data.password, 12);

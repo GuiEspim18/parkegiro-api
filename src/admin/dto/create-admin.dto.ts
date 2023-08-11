@@ -1,3 +1,4 @@
+import { Company } from "src/company/entities/company.entity";
 import { Photo } from "src/photo/entities/photo.entity";
 
 export class CreateAdminDto {
@@ -20,4 +21,5 @@ export class CreateAdminDto {
     photo: Photo;
     notifications: number;
     lastAccess: Date;
+    company: Company
 }
