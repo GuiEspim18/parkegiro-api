@@ -20,7 +20,6 @@ export class CompanyService {
 
   public async create(data: CreateCompanyDto): Promise<CreateCompanyDto> {
     if (data) {
-      console.log(data)
       const company: CreateCompanyDto = this.companyRepository.create(data);
       return await this.companyRepository.save(company);
     }

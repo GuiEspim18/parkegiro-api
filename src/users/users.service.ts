@@ -26,7 +26,7 @@ export class UsersService {
 
   public async create(data: CreateUserDto): Promise<CreateUserDto> {
     if (data) {
-      const exists: CreateUserDto = await this.userRepository.findOne({ where: { email: data.email } });
+      const exists: CreateUserDto = await this.userRepository.findOne({ where: { email: data.email }, relations: ['company'] });
       if (exists) throw new HttpException("Usuário já cadastrado", 500);
       data.password = await bcrypt.hash(data.password, 12)
       const user: CreateUserDto = this.userRepository.create(data);
@@ -42,7 +42,7 @@ export class UsersService {
    */
 
   public async findAll(): Promise<Array<CreateUserDto>> {
-    return await this.userRepository.find({ relations: ['photo'], order: { createdAt: "ASC" } });
+    return await this.userRepository.find({ relations: ['photo', 'company'], order: { createdAt: "ASC" } });
   }
 
 

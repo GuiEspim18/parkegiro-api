@@ -1,4 +1,5 @@
 import { Admin } from "src/admin/entities/admin.entity";
+import { Company } from "src/company/entities/company.entity";
 import { Photo } from "src/photo/entities/photo.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -67,5 +68,8 @@ export class User {
 
     @ManyToOne(() => Admin, admin => admin.user)
     admin: Admin
+
+    @ManyToOne(() => Company, company => company)
+    company: Company
 
 }

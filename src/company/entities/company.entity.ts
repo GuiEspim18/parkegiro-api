@@ -1,5 +1,6 @@
 import { Admin } from "src/admin/entities/admin.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/entities/user.entity";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Company {
@@ -19,8 +20,11 @@ export class Company {
     @Column()
     phone: string
 
-    @OneToOne( ()=> Admin, admin => admin.company )
+    @OneToOne(() => Admin, admin => admin.company)
     @JoinColumn()
     admin: Admin
+
+    @OneToMany(() => User, user => user.company, { nullable: true })
+    user: Array<User>
 
 }

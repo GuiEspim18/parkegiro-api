@@ -6,11 +6,13 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { AuthController } from './auth.controller';
+import { Admin } from 'src/admin/entities/admin.entity';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
-            User
+            User,
+            Admin
         ]),
         PassportModule,
         JwtModule.register({

@@ -46,7 +46,7 @@ export class AdminService {
    */
 
   public async findAll(): Promise<Array<CreateAdminDto>> {
-    return await this.adminRepository.find({ relations: ['photo', 'user'] });
+    return await this.adminRepository.find({ relations: ['photo', 'user', 'company'] });
   }
 
 
@@ -58,7 +58,7 @@ export class AdminService {
 
   public async findOne(id: number) {
     if (id && Number(id)) {
-      const admin: CreateAdminDto = await this.adminRepository.findOne({ where: { id: id } });
+      const admin: CreateAdminDto = await this.adminRepository.findOne({ where: { id: id },relations: ['photo', 'user', 'company'] });
       if (admin) return admin;
       throw new HttpException("None user found", 500);
     }

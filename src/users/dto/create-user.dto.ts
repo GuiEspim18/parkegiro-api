@@ -1,3 +1,4 @@
+import { Company } from "src/company/entities/company.entity";
 import { Photo } from "src/photo/entities/photo.entity";
 
 export class CreateUserDto {
@@ -20,4 +21,5 @@ export class CreateUserDto {
     photo: Photo;
     notifications: number;
     lastAccess: Date;
+    company: Company;
 }

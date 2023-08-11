@@ -24,9 +24,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     public async validate(data: PlayLoadDto): Promise<PlayLoadDto> {
         const playload: PlayLoadDto = {
             id: data.id,
-            username: data.username
+            username: data.username,
+            company: data.company
         };
-        console.log(playload)
         return playload;
     }
 

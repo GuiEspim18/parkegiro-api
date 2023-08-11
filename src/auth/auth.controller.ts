@@ -1,4 +1,4 @@
-import { Body, Controller, Patch } from "@nestjs/common";
+import { Body, Controller, Param, Patch } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginResultDto } from "./dto/loginResult.dto";
 
@@ -14,9 +14,10 @@ export class AuthController {
      * @returns Promise<LoginResultDto>
      */
 
-    @Patch('login')
-    public login(@Body() data: any): Promise<LoginResultDto> {
-        return this.authService.loginUser(data);
+    @Patch('login/:id')
+    public login(@Body() data: any, @Param('id') id: number): Promise<LoginResultDto> {
+        console.log(id)
+        return this.authService.login(id, data);
     }
 
 
