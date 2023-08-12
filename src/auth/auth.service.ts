@@ -37,7 +37,6 @@ export class AuthService {
     }
 
 
-
     /** 
      * Method to execute the admin login
      * @param data
@@ -118,6 +117,19 @@ export class AuthService {
         const token: any = this.jwtService.verify(param);
         if (token) return true;
         return false;
+    }
+
+
+    /** 
+     * Verify if is admin
+     * @param data
+     * @returns Promise<boolean>
+     */
+
+    public async verifyAdmin(data: any): Promise<boolean> {
+        const admin: CreateAdminDto =  await this.adminRepository.findOne({ where: { id: data.id, username: data.username, email: data.email } });
+        if (admin) return true
+        return false
     }
 
 }

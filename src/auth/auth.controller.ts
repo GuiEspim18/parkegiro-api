@@ -7,6 +7,18 @@ export class AuthController {
 
     constructor (private readonly authService: AuthService) { }
 
+    
+    /** 
+     * Verify if is admin
+     * @param data
+     * @returns Promise<boolean>
+     */
+
+    @Patch('admin')
+    public verifyAdmin(@Body() data: any): Promise<boolean> {
+        return this.authService.verifyAdmin(data);
+    }
+
 
     /** 
      * Method to execute the login 
